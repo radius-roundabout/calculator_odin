@@ -1,0 +1,57 @@
+Create functions for basic operations
+
+Creaete variables for the first number, the second number
+    and the operator
+
+Function Operate takes the two numbers and the operator 
+    and calls the right functions
+
+
+Store operations in object by their 
+    corresponding symbol
+Create an operate function that takes the 2 numbers
+    and the operator and gets the right function
+Mouse event on click when all number buttons are pushed.
+    Mouse click event on operators to be stored in "operator,"
+    also in display. 
+    Number, operator, number stored in variables.
+    Selections appear in display on calculator
+Click event when enter is pressed. Event passed to function 
+    In which the operator variable is used to select an 
+    operation from the objet. 
+()
+
+
+First, inititialize all variables
+
+Then set it to the all clear settings; display is 0, variables empty
+
+On first click, set firstNum equal to innner html of number buttom (IF counter = 1)
+    Keep adding (concatenating) numbers to firstNum if more numbers are clicked
+    Make each variable appear on the display as they are clicked
+        Counter variable increases to 2 (from 1)
+When operator is clicked, store inner html (operator sign) in the operator variable
+    Do not change display. Or make display "blink"?
+    Operator counter increases to 2 (from 1)
+    (See below) When operator is clicked and counter is 2, do operation and display result
+    Reset operator count to 1.
+When a number is clicked again after the operator, it gets added to secondNum variable  
+    IF counter variable is 2, add to secondNum
+    Also keep adding more numbers to secondNum if more are pressed.
+    Make each number appear in display
+
+If equal sign or another operator is pressed, do the calculation represented by the operator symbol in the operator variable
+    When Equal sign is pressed, do the calculation.
+    When operator is pressed and operator count is 2, do the calculation
+    Reset operator counter to 1; 
+    display result
+
+
+Use counter variables to decide where the values are stored?
+
+
+Operate function: 
+
+Argument is Num1, num2 and operator. 
+
+
