@@ -54,4 +54,6 @@ Operate function:
 
 Argument is Num1, num2 and operator. 
 
+First number is entered. 
+
 
