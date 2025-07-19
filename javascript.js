@@ -25,8 +25,10 @@ function operate(num1, num2, operator) {
 let firstNum = "";
 let sign = "";
 let secondNum = ""; 
-let numberCount = 1;
-let operatorCount = 1; 
+let whichNumber = 1;
+let isOperator = false; 
+let result = 0; 
+let equalPressed = false; 
 
 // console.log(operate(firstNum, secondNum, operator)); 
 
@@ -38,13 +40,23 @@ const equal = document.querySelector("#equal");
 numbers.forEach((number) => {
 
     number.addEventListener("click", (e) => {
-        let value = number.innerHTML; 
+        let newValue = number.innerHTML; 
 
-        if (numberCount === 1) {
-            firstNum = firstNum + value; 
+         if (equalPressed == true) {
+            firstNum = newValue; 
             display.innerHTML = firstNum; 
+            sign = "";
+            secondNum = ""; 
+            whichNumber = 1;
+            isOperator = false; 
+            equalPressed = false; 
+
+        } else if (whichNumber === 1) {
+            firstNum = firstNum + newValue; 
+            display.innerHTML = firstNum; 
+
         } else {
-            secondNum = secondNum + value; 
+            secondNum = secondNum + newValue; 
             display.innerHTML = secondNum; 
         }
     });
@@ -52,47 +64,91 @@ numbers.forEach((number) => {
 
 operators.forEach((operator) => {
     operator.addEventListener("click", (e) => {
-        
-        sign = operator.innerHTML; 
 
-        if (operatorCount === 2) {
 
-            let result = operate(parseInt(firstNum), parseInt(secondNum), sign);
-            display.innerHTML = result;
+        if (isOperator === false) {
+
+            sign = operator.innerHTML; 
+
+            if (equalPressed == false) { //disables the reset from a misfired equal button 
+                
+                whichNumber= 2; //switches the number count so that the next number will be stored in secondNum
+            }
             
-            firstNum = `${result}`; //switches back to string to make operate work
-            secondNum = ""; 
-            operatorCount = 1; //resets so it will do another calculation
-         };
+            if (!secondNum === "") { //stops operate from running before there is a second number
+                isOperator = true // switches the operator count so the calculation is done on next click
+            }
 
-         numberCount = 2; //switches the number count so that the next number will be stored in secondNum
-         operatorCount = 2 // switches the operator count so the calculation is done next time
+        } else if (operatorCount === 2) {
 
-        // if (secondNum = 0) {
-        //     display.innerHTML = "ERROR"; 
-        // }
-
+            getResult(); 
+            sign = operator.innerHTML; //changes to second operator, awaits 2nd number
+        }
     }); 
 }); 
 
 equal.addEventListener("click", (e) => {
 
-    let result = operate(parseInt(firstNum), parseInt(secondNum), sign);
-    display.innerHTML = result;
-            
-    sign = ""; 
-    firstNum = ""; 
-    secondNum = ""; 
-    operatorCount = 1; //resets so it will do another calculation
-    numberCount = 1; 
+    if ((firstNum) &&
+        (secondNum) &&
+        (sign)) {       
+            getResult(); 
+            sign = ""; 
+    }
 
+        equalPressed = true; 
+    //problem: need to set firstNum but also let 
 }); 
 
+function getResult() {
+
+    result = operate(parseInt(firstNum), parseInt(secondNum), sign); //completes first operation
+    Math.round((result * 100)/100); 
+    display.innerHTML = result;
+    
+    firstNum = `${result}`; //switches back to string to make operate() work
+    secondNum = ""; 
+    isOperator = false; //resets so it will do another calculation
+}
 
 
-// console.log(operators.add(firstNum, secondNum)); 
-// console.log(operators.subtract(firstNum, secondNum));
-// console.log(operators.multiply(firstNum, secondNum));
-// console.log(operators.divide(firstNum, secondNum)); 
+// special button event listeners
 
+const allClear = document.querySelector("#all-clear"); 
+const clear = document.querySelector("#clear"); 
+
+allClear.addEventListener("click", (e) => {
+
+    firstNum = "";
+    sign = "";
+    secondNum = ""; 
+    whichNumber = 1;
+    isOperator = false; 
+    display.innerHTML = "0"; 
+
+});
+
+
+function backSpace(str) {
+
+    let array = str.split(""); 
+    array.pop(); 
+    return array.join(""); 
+
+}
+
+clear.addEventListener("click", (e) => {
+
+    if (!display.innerHTML == result) {
+
+        if (whichNumber == 1) {
+            firstNum = backSpace(firstNum);
+            display.innerHTML = firstNum 
+        } else {
+            secondNum = backSpace(secondNum); 
+            display.innerHTML = secondNum;
+        }
+    }
+
+}); 
 
