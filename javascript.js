@@ -26,7 +26,7 @@ let firstNum = "";
 let sign = "";
 let secondNum = ""; 
 let whichNumber = 1;
-let isOperator = false; 
+let canOperate = false; 
 let result = 0; 
 let equalPressed = false; 
 
@@ -40,27 +40,27 @@ const equal = document.querySelector("#equal");
 numbers.forEach((number) => {
 
     number.addEventListener("click", (e) => {
+
         let newValue = number.innerHTML; 
 
-         if (equalPressed == true) { //need to make this more intuitive
+         if (equalPressed == true) { //pressing another number after = is same as pressing AC
 
-            firstNum = newValue; 
-            display.innerHTML = firstNum; 
-            sign = "";
-            secondNum = ""; 
-            whichNumber = 1;
-            isOperator = false; 
-            equalPressed = false; 
-
-        } else if (whichNumber === 1) {
+            clearAll();
+         } 
+        
+        
+        if (whichNumber === 1) {
             firstNum = firstNum + newValue; 
             display.innerHTML = firstNum; 
 
         } else {
 
-            decimalPressed = false; 
+            decimalPressed = false; // toggle on decimal for secondNum
+           
             secondNum = secondNum + newValue; 
             display.innerHTML = secondNum; 
+
+            canOperate = true; // all 3 variables now exist in final form for operation
         }
     });
 }); 
@@ -68,26 +68,20 @@ numbers.forEach((number) => {
 operators.forEach((operator) => {
     operator.addEventListener("click", (e) => {
 
-        if (isOperator === false) { 
+        if (canOperate === false) { 
 
             sign = operator.innerHTML; 
 
-            if (equalPressed == false) { //disables reset if equal button is pressed at the wrong time 
-                
-                whichNumber= 2; //switches the number count so that the next number will be stored in secondNum
-            }
-            
-            if (!secondNum === "") { //stops operate from running before there is a second number
-                isOperator = true // switches the operator count so the calculation is done on next click
-            }
+            whichNumber= 2; //switches the number counter so that the next number will be stored in secondNum
 
         } else {
 
             getResult(); 
-            sign = operator.innerHTML; //changes to second operator, awaits 2nd number
+
+            sign = operator.innerHTML; //changes sign to new operator, awaits 2nd number
         }
 
-        decimalPressed = true; 
+        decimalPressed = true; //toggles off decimal now that firstNum is complete
          
     }); 
 }); 
@@ -99,9 +93,9 @@ equal.addEventListener("click", (e) => {
         (sign)) {       
             getResult(); 
             sign = ""; 
+            equalPressed = true; 
     }
 
-        equalPressed = true; 
 }); 
 
 function getResult() {
@@ -119,7 +113,7 @@ function getResult() {
         
         firstNum = `${result}`; //switches back to string to make operate() work
         secondNum = ""; 
-        isOperator = false; //resets so it will do another calculation
+        canOperate = false; //resets so it will do another calculation
         
     }
 }
@@ -145,7 +139,7 @@ function clearAll() {
     sign = "";
     secondNum = ""; 
     whichNumber = 1;
-    isOperator = false; 
+    canOperate = false; 
     decimalPressed = false; 
     equalPressed = false; 
 }
