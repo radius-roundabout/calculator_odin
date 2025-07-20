@@ -42,7 +42,8 @@ numbers.forEach((number) => {
     number.addEventListener("click", (e) => {
         let newValue = number.innerHTML; 
 
-         if (equalPressed == true) {
+         if (equalPressed == true) { //need to make this more intuitive
+
             firstNum = newValue; 
             display.innerHTML = firstNum; 
             sign = "";
@@ -56,6 +57,8 @@ numbers.forEach((number) => {
             display.innerHTML = firstNum; 
 
         } else {
+
+            decimalPressed = false; 
             secondNum = secondNum + newValue; 
             display.innerHTML = secondNum; 
         }
@@ -65,12 +68,11 @@ numbers.forEach((number) => {
 operators.forEach((operator) => {
     operator.addEventListener("click", (e) => {
 
-
-        if (isOperator === false) {
+        if (isOperator === false) { 
 
             sign = operator.innerHTML; 
 
-            if (equalPressed == false) { //disables the reset from a misfired equal button 
+            if (equalPressed == false) { //disables reset if equal button is pressed at the wrong time 
                 
                 whichNumber= 2; //switches the number count so that the next number will be stored in secondNum
             }
@@ -79,11 +81,14 @@ operators.forEach((operator) => {
                 isOperator = true // switches the operator count so the calculation is done on next click
             }
 
-        } else if (operatorCount === 2) {
+        } else {
 
             getResult(); 
             sign = operator.innerHTML; //changes to second operator, awaits 2nd number
         }
+
+        decimalPressed = true; 
+         
     }); 
 }); 
 
@@ -97,43 +102,66 @@ equal.addEventListener("click", (e) => {
     }
 
         equalPressed = true; 
-    //problem: need to set firstNum but also let 
 }); 
 
 function getResult() {
 
-    result = operate(parseInt(firstNum), parseInt(secondNum), sign); //completes first operation
-    Math.round((result * 100)/100); 
-    display.innerHTML = result;
-    
-    firstNum = `${result}`; //switches back to string to make operate() work
-    secondNum = ""; 
-    isOperator = false; //resets so it will do another calculation
+     if (sign == "/" && secondNum == "0") {
+        
+        display.innerHTML = "NOPE!";
+        clearAll(); 
+
+    } else {
+
+        result = operate(parseFloat(firstNum), parseFloat(secondNum), sign); //completes first operation
+        result = Math.round((result + Number.EPSILON) * 100) / 100; 
+        display.innerHTML = result;
+        
+        firstNum = `${result}`; //switches back to string to make operate() work
+        secondNum = ""; 
+        isOperator = false; //resets so it will do another calculation
+        
+    }
 }
 
 
 // special button event listeners
 
 const allClear = document.querySelector("#all-clear"); 
-const clear = document.querySelector("#clear"); 
+const clear = document.querySelector("#clear");
+const decimal = document.querySelector("#decimal");  
+let decimalPressed = false; 
 
 allClear.addEventListener("click", (e) => {
 
+    clearAll(); 
+    display.innerHTML = "0"; 
+
+});
+
+function clearAll() {
+    
     firstNum = "";
     sign = "";
     secondNum = ""; 
     whichNumber = 1;
     isOperator = false; 
-    display.innerHTML = "0"; 
-
-});
+    decimalPressed = false; 
+    equalPressed = false; 
+}
 
 
 function backSpace(str) {
 
     let array = str.split(""); 
     array.pop(); 
-    return array.join(""); 
+
+    if (array[array.length - 1] == ".") {
+
+        array.pop(); 
+    }
+
+     return array.join(""); 
 
 }
 
@@ -149,6 +177,26 @@ clear.addEventListener("click", (e) => {
             display.innerHTML = secondNum;
         }
     }
+
+}); 
+
+decimal.addEventListener("click", (e) => {
+
+    if (!decimalPressed) {
+
+        if (whichNumber == 1) {
+            
+            firstNum = firstNum + "."; 
+            display.innerHTML = firstNum; 
+        } else {
+
+            secondNum = secondNum + "."
+            display.innerHTML = secondNum; 
+        }
+
+    } 
+
+    decimalPressed = true; 
 
 }); 
 
